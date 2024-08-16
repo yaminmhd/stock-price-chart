@@ -1,17 +1,22 @@
-import { useState } from "react";
-
 import "./App.css";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import { PriceChart } from "./components/PriceChart";
+import { stockPriceResult } from "./mockData";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <Box>
-      <Typography variant="h1">Vite + React</Typography>
-      <Typography variant="h3">{count}</Typography>
-      <Button onClick={() => setCount(count + 1)}>Upvote</Button>
-    </Box>
+    <Grid container rowSpacing={4} spacing={2}>
+      <Grid xs={12}>
+        <Typography variant="h1">Stock Price Chart</Typography>
+      </Grid>
+
+      <Grid xs={12}>
+        <Box display="flex" justifyContent="center">
+          <PriceChart stockPriceResult={stockPriceResult} />
+        </Box>
+      </Grid>
+    </Grid>
   );
 }
 
