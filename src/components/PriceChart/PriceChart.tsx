@@ -1,12 +1,13 @@
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from "recharts";
 import { LineChart } from "recharts";
-import { StockApiResponse } from "../../mockData";
+import { StockApiResponse } from "../../mock";
+import { Typography } from "@mui/material";
 
 type PriceChartProps = {
-  stockPriceResult: StockApiResponse;
+  stockPriceResult: StockApiResponse[];
 };
 
-const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
+const PriceChart = ({ stockPriceResult = [] }: PriceChartProps) => {
   const formatDataForChart = (
     stockData: StockApiResponse["results"]
   ): { date: string; price: number }[] => {
@@ -16,6 +17,13 @@ const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
     }));
   };
 
+  if (stockPriceResult.length === 0) {
+    return (
+      <Typography variant="h3">
+        Select a stock to view the price chart
+      </Typography>
+    );
+  }
   return (
     <LineChart width={1000} height={500}>
       <CartesianGrid strokeDasharray="3 3" />
@@ -23,14 +31,16 @@ const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Line
-        type="monotone"
-        dataKey="price"
-        data={formatDataForChart(stockPriceResult.results)}
-        name={stockPriceResult.ticker}
-        key={stockPriceResult.ticker}
-        stroke={`#8884d8`}
-      />
+      {stockPriceResult.map((stockPriceResult) => (
+        <Line
+          type="monotone"
+          dataKey="price"
+          data={formatDataForChart(stockPriceResult.results)}
+          name={stockPriceResult.ticker}
+          key={stockPriceResult.ticker}
+          stroke={`#8884d8`}
+        />
+      ))}
     </LineChart>
   );
 };

@@ -1,26 +1,6 @@
-export type StockResult = {
-  v: number; // volume
-  vw: number; // volume weighted average price
-  o: number; // open price
-  c: number; // close price
-  h: number; // high price
-  l: number; // low price
-  t: number; // timestamp
-  n: number; // number of transactions
-};
+import { StockApiResponse } from ".";
 
-export type StockApiResponse = {
-  ticker: string;
-  queryCount: number;
-  resultsCount: number;
-  adjusted: boolean;
-  results: StockResult[];
-  status: string;
-  request_id: string;
-  count: number;
-};
-
-export const stockPriceResult: StockApiResponse = {
+export const aaplStockPriceResult: StockApiResponse = {
   ticker: "AAPL",
   queryCount: 24,
   resultsCount: 24,
