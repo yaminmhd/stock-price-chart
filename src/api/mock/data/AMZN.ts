@@ -1,4 +1,4 @@
-import { StockApiResponse } from ".";
+import { StockApiResponse } from "../../stockPrices";
 
 export const aazmStockPriceResult: StockApiResponse = {
   ticker: "AMZN",

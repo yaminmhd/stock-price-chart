@@ -1,4 +1,4 @@
-import { StockApiResponse } from ".";
+import { StockApiResponse } from "../../stockPrices";
 
 export const aaplStockPriceResult: StockApiResponse = {
   ticker: "AAPL",

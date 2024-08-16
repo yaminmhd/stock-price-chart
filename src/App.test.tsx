@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { retrieveStockPrice, StockApiResponse } from "./mock";
+import { retrieveStockPrice } from "./api/mock";
+import { StockApiResponse } from "./api/stockPrices";
 
 vi.mock("@tanstack/react-query");
 const mockFetchStockPriceQuery = vi.mocked(useQuery<StockApiResponse[]>);
@@ -13,6 +14,11 @@ describe("App", () => {
       isPending: false,
     } as UseQueryResult<StockApiResponse[]>);
   });
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
   it("should render title", () => {
     render(<App />);
 
@@ -33,14 +39,18 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
-  it("should render loading indicator upon selecting an dropdown option", () => {
+  it("should render loading indicator upon selecting an dropdown option", async () => {
     mockFetchStockPriceQuery.mockReturnValue({
-      isPending: true,
+      isLoading: true,
     } as UseQueryResult<StockApiResponse[]>);
 
     render(<App />);
+    const inputElement = screen.getByPlaceholderText(/select stocks/i);
+    fireEvent.mouseDown(inputElement);
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("option", { name: /AAPL/i }));
+
+    expect(await screen.findByText("Loading...")).toBeInTheDocument();
   });
 
   it("should render stock chart and chip when user selects an option", () => {
@@ -54,6 +64,7 @@ describe("App", () => {
 
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
     fireEvent.mouseDown(inputElement);
+
     fireEvent.click(screen.getByRole("option", { name: /AAPL/i }));
 
     expect(

@@ -1,13 +1,12 @@
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from "recharts";
 import { LineChart } from "recharts";
-import { StockApiResponse } from "../../mock";
-import { Typography } from "@mui/material";
+import { StockApiResponse } from "../../api/stockPrices";
 
 type PriceChartProps = {
   stockPriceResult: StockApiResponse[];
 };
 
-const PriceChart = ({ stockPriceResult = [] }: PriceChartProps) => {
+const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
   const formatDataForChart = (
     stockData: StockApiResponse["results"]
   ): { date: string; price: number }[] => {
@@ -17,13 +16,6 @@ const PriceChart = ({ stockPriceResult = [] }: PriceChartProps) => {
     }));
   };
 
-  if (stockPriceResult.length === 0) {
-    return (
-      <Typography variant="h3">
-        Select a stock to view the price chart
-      </Typography>
-    );
-  }
   return (
     <LineChart width={1000} height={500}>
       <CartesianGrid strokeDasharray="3 3" />
