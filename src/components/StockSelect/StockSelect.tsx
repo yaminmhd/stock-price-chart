@@ -3,11 +3,13 @@ import { SyntheticEvent } from "react";
 
 type StockSelectProps = {
   stockOptions: string[];
+  selectedStocks: string[];
   handleStockSelection: (event: SyntheticEvent, value: string[]) => void;
 };
 
 const StockSelect = ({
   stockOptions,
+  selectedStocks,
   handleStockSelection,
 }: StockSelectProps) => {
   return (
@@ -15,6 +17,7 @@ const StockSelect = ({
       multiple
       id="stock-multiple-selection"
       options={stockOptions}
+      value={selectedStocks}
       onChange={handleStockSelection}
       renderTags={(value, getTagProps) =>
         value.map((option: string, index: number) => (
@@ -25,6 +28,7 @@ const StockSelect = ({
       renderInput={(params) => (
         <TextField {...params} placeholder="Select stocks" />
       )}
+      isOptionEqualToValue={(option, value) => option === value}
     />
   );
 };

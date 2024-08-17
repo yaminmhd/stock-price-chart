@@ -1,4 +1,12 @@
-import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from "recharts";
+import {
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Line,
+  ResponsiveContainer,
+} from "recharts";
 import { LineChart } from "recharts";
 import { StockApiResponse } from "../../api/stockPrices";
 
@@ -19,7 +27,7 @@ const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
   return (
     <LineChart width={1000} height={500}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="date" />
+      <XAxis dataKey="date" type="category" allowDuplicatedCategory={false} />
       <YAxis />
       <Tooltip />
       <Legend />

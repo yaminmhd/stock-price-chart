@@ -8,16 +8,23 @@ import { Typography, Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getStockPrices, StockApiResponse } from "./api/stockPrices";
 import { AxiosError } from "axios";
+import { startOfMonth } from "date-fns";
+import { DateRange } from "react-day-picker";
+import { DateRangePicker } from "./components/DateRangePicker";
 
 function App() {
   const stockOptions = ["AAPL", "AMZN"];
   const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
+  const [selectedRange, setSelectedRange] = useState<DateRange>({
+    from: startOfMonth(new Date()),
+    to: new Date(),
+  });
 
   const { data, isLoading, isError } = useQuery<StockApiResponse[], AxiosError>(
     {
-      queryKey: ["stockPrice", selectedStocks],
-      queryFn: () => getStockPrices(selectedStocks),
-      enabled: selectedStocks.length > 0,
+      queryKey: ["stockPrice", selectedStocks, selectedRange],
+      queryFn: () => getStockPrices(selectedStocks, selectedRange),
+      enabled: selectedStocks.length > 0 && selectedRange !== undefined,
     }
   );
 
@@ -49,16 +56,28 @@ function App() {
   };
 
   return (
-    <Grid container rowSpacing={4} spacing={2}>
+    <Grid container>
       <Grid xs={12}>
-        <Typography variant="h1">Stock Price Chart</Typography>
+        <Typography variant="h2">Stock Price Chart</Typography>
       </Grid>
 
-      <Grid xs={6} sx={{ mb: "20px" }}>
-        <StockSelect
-          stockOptions={stockOptions}
-          handleStockSelection={handleStockSelection}
-        />
+      <Grid xs={12} sx={{ mb: "20px" }}>
+        <Box display="flex" justifyContent="center">
+          <StockSelect
+            stockOptions={stockOptions}
+            selectedStocks={selectedStocks}
+            handleStockSelection={handleStockSelection}
+          />
+        </Box>
+      </Grid>
+
+      <Grid xs={12}>
+        <Box display="flex" justifyContent="center">
+          <DateRangePicker
+            selectedRange={selectedRange}
+            setSelectedRange={setSelectedRange}
+          />
+        </Box>
       </Grid>
 
       <Grid xs={12}>

@@ -1,6 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import PriceChart from "../PriceChart";
 import { retrieveStockPrice } from "../../../api/mock";
+global.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
 
 describe("<PriceChart/>", () => {
   it("should render PriceChart with 1 ticker", () => {

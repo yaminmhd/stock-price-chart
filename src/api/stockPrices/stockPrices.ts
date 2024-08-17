@@ -1,5 +1,7 @@
 import { AxiosResponse } from "axios";
 import { api } from "../base";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
 
 type StockResult = {
   v: number; // volume
@@ -24,22 +26,26 @@ type StockApiResponse = {
 };
 
 const getStockPrice = async (
-  ticker: string
+  ticker: string,
+  selectedDateRange: DateRange
 ): Promise<AxiosResponse<StockApiResponse>> => {
+  const fromDate = format(selectedDateRange?.from || new Date(), "yyyy-MM-dd");
+  const toDate = format(selectedDateRange?.to || new Date(), "yyyy-MM-dd");
   return await api.get(
     `${
       import.meta.env.VITE_POLYGON_BASE_URL
-    }v2/aggs/ticker/${ticker}/range/1/day/2023-01-09/2023-02-10?adjusted=true&sort=asc&apiKey=${
+    }v2/aggs/ticker/${ticker}/range/1/day/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=${
       import.meta.env.VITE_POLYGON_API_KEY
     }`
   );
 };
 
 const getStockPrices = async (
-  tickers: string[]
+  tickers: string[],
+  selectedDateRange: DateRange
 ): Promise<StockApiResponse[]> => {
   const tickerResponses = await Promise.all(
-    tickers.map((ticker) => getStockPrice(ticker))
+    tickers.map((ticker) => getStockPrice(ticker, selectedDateRange))
   );
   return tickerResponses.map((response) => response.data);
 };
