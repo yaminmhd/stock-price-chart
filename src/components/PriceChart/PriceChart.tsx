@@ -1,26 +1,23 @@
-import {
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Line,
-  ResponsiveContainer,
-} from "recharts";
+import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from "recharts";
 import { LineChart } from "recharts";
 import { StockApiResponse } from "../../api/stockPrices";
+import { PriceTypeConfig } from "../PriceType";
 
 type PriceChartProps = {
   stockPriceResult: StockApiResponse[];
+  selectedPriceType: PriceTypeConfig;
 };
 
-const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
+const PriceChart = ({
+  stockPriceResult,
+  selectedPriceType,
+}: PriceChartProps) => {
   const formatDataForChart = (
     stockData: StockApiResponse["results"]
   ): { date: string; price: number }[] => {
     return stockData.map((data) => ({
       date: new Date(data.t).toISOString().split("T")[0],
-      price: data["c"],
+      price: data[selectedPriceType.value],
     }));
   };
 

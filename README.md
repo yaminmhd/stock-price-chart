@@ -62,7 +62,7 @@ So that I can chart a time series of prices for the selected stocks and date ran
 
 - [x] I can display the time series of prices of the selected stocks in the same chart.
 - [ ] I can’t select more than 3 stocks to display at the same time.
-- [ ] I can toggle between the following price types (Open, High, Low, Close) in the interactive chart.
+- [x] I can toggle between the following price types (Open, High, Low, Close) in the interactive chart.
 - [x] I can change the date range in the interactive chart.
 
 <br>

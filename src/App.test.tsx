@@ -23,7 +23,7 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByText("📈 Stock price chart")).toBeInTheDocument();
-    expect(screen.getByText("Filters")).toBeInTheDocument();
+    expect(screen.getByText(/filters/i)).toBeInTheDocument();
     expect(screen.getByTestId("filter-icon")).toBeInTheDocument();
   });
 
@@ -34,10 +34,19 @@ describe("App", () => {
     expect(screen.getByPlaceholderText(/select stocks/i)).toBeInTheDocument();
   });
 
+  it("should render price type component", () => {
+    render(<App />);
+
+    expect(screen.getByText(/price type/i)).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(/select price type/i)
+    ).toBeInTheDocument();
+  });
+
   it("should render date range component", () => {
     render(<App />);
 
-    expect(screen.getByText("Date Range")).toBeInTheDocument();
+    expect(screen.getByText(/date range/i)).toBeInTheDocument();
     expect(screen.getByTestId("date-range-picker")).toBeInTheDocument();
   });
 
@@ -45,7 +54,7 @@ describe("App", () => {
     render(<App />);
 
     expect(
-      screen.getByText("Select a stock to view the price chart")
+      screen.getByText(/select a stock to view the price chart/i)
     ).toBeInTheDocument();
   });
 

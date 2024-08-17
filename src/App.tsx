@@ -11,10 +11,20 @@ import { startOfMonth } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "./components/DateRangePicker";
 import TuneIcon from "@mui/icons-material/Tune";
+import { PriceType, PriceTypeConfig } from "./components/PriceType";
 
 function App() {
   const stockOptions = ["AAPL", "AMZN"];
+  const priceTypesOptions: PriceTypeConfig[] = [
+    { label: "Close", value: "c" },
+    { label: "Open", value: "o" },
+    { label: "High", value: "h" },
+    { label: "Low", value: "l" },
+  ];
   const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
+  const [selectedPriceType, setSelectedPriceType] = useState<PriceTypeConfig>(
+    priceTypesOptions[0]
+  );
   const [selectedRange, setSelectedRange] = useState<DateRange>({
     from: startOfMonth(new Date()),
     to: new Date(),
@@ -52,7 +62,12 @@ function App() {
       );
     }
 
-    return <PriceChart stockPriceResult={data ?? []} />;
+    return (
+      <PriceChart
+        stockPriceResult={data ?? []}
+        selectedPriceType={selectedPriceType}
+      />
+    );
   };
 
   return (
@@ -71,6 +86,15 @@ function App() {
           stockOptions={stockOptions}
           selectedStocks={selectedStocks}
           handleStockSelection={handleStockSelection}
+        />
+
+        <Typography variant="subtitle2" mt={2}>
+          Price Type
+        </Typography>
+        <PriceType
+          priceTypesOptions={priceTypesOptions}
+          selectedPriceType={selectedPriceType}
+          setSelectedPriceType={setSelectedPriceType}
         />
 
         <Typography variant="subtitle2" mt={2}>
