@@ -24,7 +24,6 @@ const StockSelect = ({
           <Chip variant="outlined" label={option} {...getTagProps({ index })} />
         ))
       }
-      style={{ width: 500 }}
       renderInput={(params) => (
         <TextField {...params} placeholder="Select stocks" />
       )}

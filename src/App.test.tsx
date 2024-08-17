@@ -19,16 +19,26 @@ describe("App", () => {
     vi.resetAllMocks();
   });
 
-  it("should render title", () => {
+  it("should render title and filters", () => {
     render(<App />);
 
-    expect(screen.getByText("Stock Price Chart")).toBeInTheDocument();
+    expect(screen.getByText("📈 Stock price chart")).toBeInTheDocument();
+    expect(screen.getByText("Filters")).toBeInTheDocument();
+    expect(screen.getByTestId("filter-icon")).toBeInTheDocument();
   });
 
   it("should render stock select component", () => {
     render(<App />);
 
+    expect(screen.getByText("Stock")).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/select stocks/i)).toBeInTheDocument();
+  });
+
+  it("should render date range component", () => {
+    render(<App />);
+
+    expect(screen.getByText("Date Range")).toBeInTheDocument();
+    expect(screen.getByTestId("date-range-picker")).toBeInTheDocument();
   });
 
   it("should render stock chart component default message", () => {

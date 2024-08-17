@@ -1,16 +1,16 @@
-import "./App.css";
 import { SyntheticEvent, useState } from "react";
 import Grid from "@mui/material/Grid";
 import { PriceChart } from "./components/PriceChart";
 
 import { StockSelect } from "./components/StockSelect";
-import { Typography, Box } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getStockPrices, StockApiResponse } from "./api/stockPrices";
 import { AxiosError } from "axios";
 import { startOfMonth } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "./components/DateRangePicker";
+import TuneIcon from "@mui/icons-material/Tune";
 
 function App() {
   const stockOptions = ["AAPL", "AMZN"];
@@ -56,34 +56,34 @@ function App() {
   };
 
   return (
-    <Grid container>
-      <Grid xs={12}>
-        <Typography variant="h2">Stock Price Chart</Typography>
+    <Grid container padding={8} spacing={5}>
+      <Grid item xs={12}>
+        <Typography variant="h5">📈 Stock price chart</Typography>
+      </Grid>
+      <Grid item xs={12} md={3}>
+        <Typography variant="h6">
+          <TuneIcon data-testid="filter-icon" sx={{ mr: "5px" }} />
+          Filters
+        </Typography>
+
+        <Typography variant="subtitle2">Stock</Typography>
+        <StockSelect
+          stockOptions={stockOptions}
+          selectedStocks={selectedStocks}
+          handleStockSelection={handleStockSelection}
+        />
+
+        <Typography variant="subtitle2" mt={2}>
+          Date Range
+        </Typography>
+        <DateRangePicker
+          selectedRange={selectedRange}
+          setSelectedRange={setSelectedRange}
+        />
       </Grid>
 
-      <Grid xs={12} sx={{ mb: "20px" }}>
-        <Box display="flex" justifyContent="center">
-          <StockSelect
-            stockOptions={stockOptions}
-            selectedStocks={selectedStocks}
-            handleStockSelection={handleStockSelection}
-          />
-        </Box>
-      </Grid>
-
-      <Grid xs={12}>
-        <Box display="flex" justifyContent="center">
-          <DateRangePicker
-            selectedRange={selectedRange}
-            setSelectedRange={setSelectedRange}
-          />
-        </Box>
-      </Grid>
-
-      <Grid xs={12}>
-        <Box display="flex" justifyContent="center">
-          {renderPriceChart()}
-        </Box>
+      <Grid item xs={12} md={9}>
+        {renderPriceChart()}
       </Grid>
     </Grid>
   );
