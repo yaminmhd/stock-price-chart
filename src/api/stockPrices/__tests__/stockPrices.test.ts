@@ -4,7 +4,7 @@ import { getStockPrices } from "../stockPrices";
 import { aaplStockPriceResult } from "../../mock/data/AAPL";
 import { aazmStockPriceResult } from "../../mock/data/AMZN";
 
-describe("getStockPrices API", () => {
+describe("StockPrices API", () => {
   const defaultDateRange = {
     from: new Date(),
     to: new Date(),

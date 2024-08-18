@@ -1,24 +1,16 @@
 import { Autocomplete, Chip, TextField } from "@mui/material";
-import { SyntheticEvent } from "react";
+import useStockChartStore from "../../store/useStockChartStore";
 
-type StockSelectProps = {
-  stockOptions: string[];
-  selectedStocks: string[];
-  handleStockSelection: (event: SyntheticEvent, value: string[]) => void;
-};
-
-const StockSelect = ({
-  stockOptions,
-  selectedStocks,
-  handleStockSelection,
-}: StockSelectProps) => {
+const stockOptions = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"];
+const StockSelect = () => {
+  const { selectedStocks, setSelectedStocks } = useStockChartStore();
   return (
     <Autocomplete
       multiple
       id="stock-multiple-selection"
       options={stockOptions}
       value={selectedStocks}
-      onChange={handleStockSelection}
+      onChange={(_, value) => setSelectedStocks(value)}
       renderTags={(value, getTagProps) =>
         value.map((option: string, index: number) => (
           <Chip

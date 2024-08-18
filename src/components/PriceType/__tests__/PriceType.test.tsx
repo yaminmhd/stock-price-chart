@@ -1,43 +1,33 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { PriceType, PriceTypeConfig } from "../PriceType";
+import { PriceType } from "../PriceType";
+import useStockChartStore from "../../../store/useStockChartStore";
+import { initialState } from "../../../store/utils/testHelpers";
+vi.mock("../../../store/useStockChartStore", () => ({
+  __esModule: true,
+  default: vi.fn(),
+}));
 
 describe("<PriceType/>", () => {
-  const priceTypesOptions: PriceTypeConfig[] = [
-    { label: "Close", value: "c" },
-    { label: "Open", value: "o" },
-    { label: "High", value: "h" },
-    { label: "Low", value: "l" },
-  ];
+  const mockedUseStockChartStore = vi.mocked(useStockChartStore);
+  const mockSetSelectedPriceType = vi.fn();
+  beforeEach(() => {
+    mockedUseStockChartStore.mockReturnValue({
+      ...initialState,
+      setSelectedPriceType: mockSetSelectedPriceType,
+    });
+  });
 
   it("renders the component with initial selected value", () => {
-    const mockSetSelectedPriceType = vi.fn();
-    const initialSelectedPriceType = priceTypesOptions[0];
-
-    render(
-      <PriceType
-        priceTypesOptions={priceTypesOptions}
-        selectedPriceType={initialSelectedPriceType}
-        setSelectedPriceType={mockSetSelectedPriceType}
-      />
-    );
+    render(<PriceType />);
 
     const inputElement = screen.getByPlaceholderText("Select price type");
     expect(inputElement).toBeInTheDocument();
-    expect(inputElement).toHaveValue(initialSelectedPriceType.label);
+    expect(inputElement).toHaveValue("Close");
   });
 
   it("calls setSelectedPriceType when a new option is selected", () => {
-    const mockSetSelectedPriceType = vi.fn();
-    const initialSelectedPriceType = priceTypesOptions[0];
-
-    render(
-      <PriceType
-        priceTypesOptions={priceTypesOptions}
-        selectedPriceType={initialSelectedPriceType}
-        setSelectedPriceType={mockSetSelectedPriceType}
-      />
-    );
+    render(<PriceType />);
 
     const inputElement = screen.getByPlaceholderText("Select price type");
     fireEvent.mouseDown(inputElement);
@@ -45,6 +35,9 @@ describe("<PriceType/>", () => {
     const newOption = screen.getByText("Open");
     fireEvent.click(newOption);
 
-    expect(mockSetSelectedPriceType).toHaveBeenCalledWith(priceTypesOptions[1]);
+    expect(mockSetSelectedPriceType).toHaveBeenCalledWith({
+      label: "Open",
+      value: "o",
+    });
   });
 });

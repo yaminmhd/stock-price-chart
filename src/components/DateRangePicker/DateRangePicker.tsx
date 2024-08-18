@@ -1,17 +1,11 @@
 import { Box } from "@mui/material";
 import { subYears } from "date-fns";
-import { DateRange, DayPicker } from "react-day-picker";
+import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
+import useStockChartStore from "../../store/useStockChartStore";
 
-type DateRangePickerProps = {
-  selectedRange: DateRange;
-  setSelectedRange: (range: DateRange) => void;
-};
-
-const DateRangePicker = ({
-  selectedRange,
-  setSelectedRange,
-}: DateRangePickerProps) => {
+const DateRangePicker = () => {
+  const { selectedRange, setSelectedRange } = useStockChartStore();
   return (
     <Box data-testid="date-range-picker">
       <DayPicker

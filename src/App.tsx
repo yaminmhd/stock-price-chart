@@ -1,49 +1,19 @@
-import { SyntheticEvent, useState } from "react";
 import Grid from "@mui/material/Grid";
-import { PriceChart } from "./components/PriceChart";
-
-import { StockSelect } from "./components/StockSelect";
 import { Typography } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { getStockPrices, StockApiResponse } from "./api/stockPrices";
-import { AxiosError } from "axios";
-import { startOfMonth } from "date-fns";
-import { DateRange } from "react-day-picker";
-import { DateRangePicker } from "./components/DateRangePicker";
 import TuneIcon from "@mui/icons-material/Tune";
-import { PriceType, PriceTypeConfig } from "./components/PriceType";
+import { PriceChart } from "./components/PriceChart";
+import { StockSelect } from "./components/StockSelect";
+import { DateRangePicker } from "./components/DateRangePicker";
+import { PriceType } from "./components/PriceType";
+import { useStockPricesQuery } from "./api/stockPrices";
+import useStockChartStore from "./store/useStockChartStore";
 
 function App() {
-  const stockOptions = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"];
-  const priceTypesOptions: PriceTypeConfig[] = [
-    { label: "Close", value: "c" },
-    { label: "Open", value: "o" },
-    { label: "High", value: "h" },
-    { label: "Low", value: "l" },
-  ];
-  const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
-  const [selectedPriceType, setSelectedPriceType] = useState<PriceTypeConfig>(
-    priceTypesOptions[0]
+  const { selectedStocks, selectedRange } = useStockChartStore();
+  const { data, isLoading, isError } = useStockPricesQuery(
+    selectedStocks,
+    selectedRange
   );
-  const [selectedRange, setSelectedRange] = useState<DateRange>({
-    from: startOfMonth(new Date()),
-    to: new Date(),
-  });
-
-  const { data, isLoading, isError } = useQuery<StockApiResponse[], AxiosError>(
-    {
-      queryKey: ["stockPrice", selectedStocks, selectedRange],
-      queryFn: () => getStockPrices(selectedStocks, selectedRange),
-      enabled: selectedStocks.length > 0 && selectedRange !== undefined,
-    }
-  );
-
-  const handleStockSelection = (
-    _: SyntheticEvent<Element, Event>,
-    value: string[]
-  ) => {
-    setSelectedStocks(value);
-  };
 
   const renderPriceChart = () => {
     if (isLoading) {
@@ -62,12 +32,7 @@ function App() {
       );
     }
 
-    return (
-      <PriceChart
-        stockPriceResult={data ?? []}
-        selectedPriceType={selectedPriceType}
-      />
-    );
+    return <PriceChart stockPriceResult={data ?? []} />;
   };
 
   return (
@@ -82,28 +47,17 @@ function App() {
         </Typography>
 
         <Typography variant="subtitle2">Stock</Typography>
-        <StockSelect
-          stockOptions={stockOptions}
-          selectedStocks={selectedStocks}
-          handleStockSelection={handleStockSelection}
-        />
+        <StockSelect />
 
         <Typography variant="subtitle2" mt={2}>
           Price Type
         </Typography>
-        <PriceType
-          priceTypesOptions={priceTypesOptions}
-          selectedPriceType={selectedPriceType}
-          setSelectedPriceType={setSelectedPriceType}
-        />
+        <PriceType />
 
         <Typography variant="subtitle2" mt={2}>
           Date Range
         </Typography>
-        <DateRangePicker
-          selectedRange={selectedRange}
-          setSelectedRange={setSelectedRange}
-        />
+        <DateRangePicker />
       </Grid>
 
       <Grid item xs={12} md={9}>

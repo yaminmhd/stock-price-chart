@@ -1,19 +1,18 @@
 import { Autocomplete, TextField } from "@mui/material";
+import useStockChartStore from "../../store/useStockChartStore";
 
 type PriceTypeOptions = "c" | "o" | "h" | "l";
 type PriceTypeConfig = { label: string; value: PriceTypeOptions };
 
-type PriceTypeProps = {
-  priceTypesOptions: PriceTypeConfig[];
-  selectedPriceType: PriceTypeConfig;
-  setSelectedPriceType: (value: PriceTypeConfig) => void;
-};
+const priceTypesOptions: PriceTypeConfig[] = [
+  { label: "Close", value: "c" },
+  { label: "Open", value: "o" },
+  { label: "High", value: "h" },
+  { label: "Low", value: "l" },
+];
 
-const PriceType = ({
-  priceTypesOptions,
-  selectedPriceType,
-  setSelectedPriceType,
-}: PriceTypeProps) => {
+const PriceType = () => {
+  const { selectedPriceType, setSelectedPriceType } = useStockChartStore();
   return (
     <Autocomplete
       id="price-type-selection"
@@ -25,6 +24,7 @@ const PriceType = ({
       renderInput={(params) => (
         <TextField {...params} placeholder="Select price type" />
       )}
+      isOptionEqualToValue={(option, value) => option.value === value.value}
     />
   );
 };

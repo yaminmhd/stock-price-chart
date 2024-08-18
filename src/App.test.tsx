@@ -3,12 +3,28 @@ import App from "./App";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { retrieveStockPrice } from "./api/mock";
 import { StockApiResponse } from "./api/stockPrices";
+import useStockChartStore from "./store/useStockChartStore";
+import { startOfMonth } from "date-fns";
+vi.mock("./store/useStockChartStore", () => ({
+  __esModule: true,
+  default: vi.fn(),
+}));
 
 vi.mock("@tanstack/react-query");
 const mockFetchStockPriceQuery = vi.mocked(useQuery<StockApiResponse[]>);
 
 describe("App", () => {
+  const mockedUseStockChartStore = vi.mocked(useStockChartStore);
   beforeEach(() => {
+    mockedUseStockChartStore.mockReturnValue({
+      selectedStocks: ["AAPL", "AMZN", "GOOGL"],
+      selectedPriceType: { label: "Close", value: "c" },
+      selectedRange: { from: startOfMonth(new Date()), to: new Date() },
+      setSelectedStocks: vi.fn(),
+      setSelectedPriceType: vi.fn(),
+      setSelectedRange: vi.fn(),
+    });
+
     mockFetchStockPriceQuery.mockReturnValue({
       data: [] as StockApiResponse[],
       isPending: false,
@@ -51,6 +67,14 @@ describe("App", () => {
   });
 
   it("should render stock chart component default message", () => {
+    mockedUseStockChartStore.mockReturnValue({
+      selectedStocks: [],
+      selectedPriceType: { label: "Close", value: "c" },
+      selectedRange: { from: startOfMonth(new Date()), to: new Date() },
+      setSelectedStocks: vi.fn(),
+      setSelectedPriceType: vi.fn(),
+      setSelectedRange: vi.fn(),
+    });
     render(<App />);
 
     expect(

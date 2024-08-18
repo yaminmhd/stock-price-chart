@@ -7,6 +7,7 @@
 - **pnpm** - Fast, disk space efficient package manager.
 - **vite** - Fast, opinionated frontend build tool.
 - **@tanstack/query** - Async data fetching and state manager.
+- **zustand** - A small, fast and scalable bearbones state-management solution using simplified flux principles.
 - **recharts** - Composable charting library built on React component.
 - **material ui** - Open-source react component library.
 - **eslint** - Pluggable linting utility for TypeScript.
