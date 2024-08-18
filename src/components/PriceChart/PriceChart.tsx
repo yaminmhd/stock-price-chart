@@ -9,6 +9,10 @@ type PriceChartProps = {
 
 const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
   const { selectedPriceType } = useStockChartStore();
+
+  const generateRandomHexColor = (): string =>
+    `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
   const formatDataForChart = (
     stockData: StockApiResponse["results"]
   ): { date: string; price: number }[] => {
@@ -25,14 +29,14 @@ const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
       <YAxis />
       <Tooltip />
       <Legend />
-      {stockPriceResult.map((stockPriceResult) => (
+      {stockPriceResult.map((stock) => (
         <Line
           type="monotone"
           dataKey="price"
-          data={formatDataForChart(stockPriceResult.results)}
-          name={stockPriceResult.ticker}
-          key={stockPriceResult.ticker}
-          stroke={`#8884d8`}
+          data={formatDataForChart(stock.results)}
+          name={stock.ticker}
+          key={stock.ticker}
+          stroke={generateRandomHexColor()}
         />
       ))}
     </LineChart>
