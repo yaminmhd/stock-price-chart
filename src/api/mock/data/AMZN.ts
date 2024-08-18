@@ -1,6 +1,6 @@
 import { StockApiResponse } from "../../stockPrices";
 
-export const aazmStockPriceResult: StockApiResponse = {
+export const amznStockPriceResult: StockApiResponse = {
   ticker: "AMZN",
   queryCount: 24,
   resultsCount: 24,

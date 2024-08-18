@@ -1,11 +1,12 @@
 import { StockApiResponse } from "../../stockPrices";
 import { aaplStockPriceResult } from "../data/AAPL";
-import { aazmStockPriceResult } from "../data/AMZN";
+import { amznStockPriceResult } from "../data/AMZN";
+
+const stockPricesResults: Record<string, StockApiResponse> = {
+  AAPL: aaplStockPriceResult,
+  AMZN: amznStockPriceResult,
+};
 
 export const retrieveStockPrice = (ticker: string): StockApiResponse => {
-  if (ticker === "AAPL") {
-    return aaplStockPriceResult;
-  } else {
-    return aazmStockPriceResult;
-  }
+  return stockPricesResults[ticker];
 };

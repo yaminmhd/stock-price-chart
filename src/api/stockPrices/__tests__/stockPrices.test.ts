@@ -2,7 +2,7 @@ import { HttpResponse, http } from "msw";
 import { server } from "../../mock/server";
 import { getStockPrices } from "../stockPrices";
 import { aaplStockPriceResult } from "../../mock/data/AAPL";
-import { aazmStockPriceResult } from "../../mock/data/AMZN";
+import { amznStockPriceResult } from "../../mock/data/AMZN";
 
 describe("StockPrices API", () => {
   const defaultDateRange = {
@@ -16,7 +16,7 @@ describe("StockPrices API", () => {
 
     expect(responses).toHaveLength(tickers.length);
     expect(responses[0]).toEqual(aaplStockPriceResult);
-    expect(responses[1]).toEqual(aazmStockPriceResult);
+    expect(responses[1]).toEqual(amznStockPriceResult);
   });
 
   it("handles network errors", async () => {
