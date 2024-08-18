@@ -21,13 +21,19 @@ const StockSelect = ({
       onChange={handleStockSelection}
       renderTags={(value, getTagProps) =>
         value.map((option: string, index: number) => (
-          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+          <Chip
+            data-testid={`${option}-chip-tag`}
+            variant="outlined"
+            label={option}
+            {...getTagProps({ index })}
+          />
         ))
       }
       renderInput={(params) => (
         <TextField {...params} placeholder="Select stocks" />
       )}
       isOptionEqualToValue={(option, value) => option === value}
+      getOptionDisabled={() => selectedStocks.length >= 3}
     />
   );
 };

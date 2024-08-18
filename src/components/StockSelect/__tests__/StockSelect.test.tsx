@@ -3,24 +3,24 @@ import StockSelect from "../StockSelect";
 
 describe("<StockSelect/>", () => {
   const mockHandleStockSelection = vi.fn();
+  const selectedStocks: string[] = [];
   const stockOptions = ["AAPL", "AMZN"];
 
-  beforeEach(() => {
-    render(
-      <StockSelect
-        stockOptions={stockOptions}
-        handleStockSelection={mockHandleStockSelection}
-      />
-    );
-  });
+  const defaultProps = {
+    stockOptions,
+    selectedStocks,
+    handleStockSelection: mockHandleStockSelection,
+  };
 
   it("renders input placeholder", () => {
+    render(<StockSelect {...defaultProps} />);
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
 
     expect(inputElement).toBeInTheDocument();
   });
 
   it("renders all stock options", () => {
+    render(<StockSelect {...defaultProps} />);
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
 
     fireEvent.mouseDown(inputElement);
@@ -30,6 +30,7 @@ describe("<StockSelect/>", () => {
   });
 
   it("calls handleStockSelection with selected options", () => {
+    render(<StockSelect {...defaultProps} />);
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
 
     fireEvent.mouseDown(inputElement);
@@ -39,19 +40,38 @@ describe("<StockSelect/>", () => {
     expect(mockHandleStockSelection).toHaveBeenCalled();
   });
 
-  it("renders selected chips", async () => {
+  it("renders max of 3 selected chips and disables the rest", async () => {
+    render(
+      <StockSelect
+        {...defaultProps}
+        stockOptions={["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]}
+        selectedStocks={["AAPL", "AMZN", "GOOGL"]}
+      />
+    );
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
 
     fireEvent.mouseDown(inputElement);
-    const firstElement = screen.getByText(stockOptions[0]);
+    const firstElement = await screen.findByRole("option", { name: "AAPL" });
     fireEvent.click(firstElement);
 
-    expect(await screen.findByText("AAPL")).toBeInTheDocument();
+    expect(screen.getByTestId("AAPL-chip-tag")).toBeInTheDocument();
 
     fireEvent.mouseDown(inputElement);
-    const secondElement = await screen.findByText(stockOptions[1]);
+    const secondElement = await screen.findByRole("option", { name: "AMZN" });
     fireEvent.click(secondElement);
 
-    expect(await screen.findByText("AMZN")).toBeInTheDocument();
+    expect(screen.getByTestId("AMZN-chip-tag")).toBeInTheDocument();
+
+    fireEvent.mouseDown(inputElement);
+    const thirdElement = await screen.findByRole("option", { name: "GOOGL" });
+    fireEvent.click(thirdElement);
+
+    expect(screen.getByTestId("GOOGL-chip-tag")).toBeInTheDocument();
+
+    fireEvent.mouseDown(inputElement);
+    const fourthElement = await screen.findByRole("option", { name: "MSFT" });
+
+    expect(fourthElement.getAttribute("aria-disabled")).toBe("true");
+    expect(screen.queryByTestId("MSFT-chip-tag")).toBeNull();
   });
 });

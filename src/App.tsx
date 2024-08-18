@@ -14,7 +14,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import { PriceType, PriceTypeConfig } from "./components/PriceType";
 
 function App() {
-  const stockOptions = ["AAPL", "AMZN"];
+  const stockOptions = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"];
   const priceTypesOptions: PriceTypeConfig[] = [
     { label: "Close", value: "c" },
     { label: "Open", value: "o" },
