@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import App from "./App";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { retrieveStockPrice } from "./api/mock";
-import { StockApiResponse } from "./api/stockPrices";
-import useStockChartStore from "./store/useStockChartStore";
+import { retrieveStockPrice } from "../../../api/mock";
+import { StockApiResponse } from "../../../api/stockPrices";
+import useStockChartStore from "../../../store/useStockChartStore";
 import { startOfMonth } from "date-fns";
-vi.mock("./store/useStockChartStore", () => ({
+import StockPriceChart from "../StockPriceChart";
+vi.mock("../../../store/useStockChartStore", () => ({
   __esModule: true,
   default: vi.fn(),
 }));
@@ -13,7 +13,7 @@ vi.mock("./store/useStockChartStore", () => ({
 vi.mock("@tanstack/react-query");
 const mockFetchStockPriceQuery = vi.mocked(useQuery<StockApiResponse[]>);
 
-describe("App", () => {
+describe("StockPriceChart", () => {
   const mockedUseStockChartStore = vi.mocked(useStockChartStore);
   beforeEach(() => {
     mockedUseStockChartStore.mockReturnValue({
@@ -36,7 +36,7 @@ describe("App", () => {
   });
 
   it("should render title and filters", () => {
-    render(<App />);
+    render(<StockPriceChart />);
 
     expect(screen.getByText("📈 Stock price chart")).toBeInTheDocument();
     expect(screen.getByText(/filters/i)).toBeInTheDocument();
@@ -44,14 +44,14 @@ describe("App", () => {
   });
 
   it("should render stock select component", () => {
-    render(<App />);
+    render(<StockPriceChart />);
 
     expect(screen.getByText("Stock")).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/select stocks/i)).toBeInTheDocument();
   });
 
   it("should render price type component", () => {
-    render(<App />);
+    render(<StockPriceChart />);
 
     expect(screen.getByText(/price type/i)).toBeInTheDocument();
     expect(
@@ -60,7 +60,7 @@ describe("App", () => {
   });
 
   it("should render date range component", () => {
-    render(<App />);
+    render(<StockPriceChart />);
 
     expect(screen.getByText(/date range/i)).toBeInTheDocument();
     expect(screen.getByTestId("date-range-picker")).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe("App", () => {
       setSelectedPriceType: vi.fn(),
       setSelectedRange: vi.fn(),
     });
-    render(<App />);
+    render(<StockPriceChart />);
 
     expect(
       screen.getByText(/select a stock to view the price chart/i)
@@ -87,7 +87,7 @@ describe("App", () => {
       isLoading: true,
     } as UseQueryResult<StockApiResponse[]>);
 
-    render(<App />);
+    render(<StockPriceChart />);
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
     fireEvent.mouseDown(inputElement);
 
@@ -103,7 +103,7 @@ describe("App", () => {
       isPending: false,
     } as UseQueryResult<StockApiResponse[]>);
 
-    render(<App />);
+    render(<StockPriceChart />);
 
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
     fireEvent.mouseDown(inputElement);
@@ -121,7 +121,7 @@ describe("App", () => {
       isError: true,
     } as UseQueryResult<StockApiResponse[]>);
 
-    render(<App />);
+    render(<StockPriceChart />);
 
     expect(screen.getByText("Error fetching data")).toBeInTheDocument();
   });
