@@ -13,6 +13,7 @@
 - **eslint** - Pluggable linting utility for TypeScript.
 - **vitest** - Next generation testing framework for vite.
 - **react-testing-library** - Simple and complete React DOM testing utilities that encourage good testing practices.
+- **msw** - Networking request mocking tool.
 
 <br>
 
@@ -70,7 +71,13 @@ So that I can chart a time series of prices for the selected stocks and date ran
 
 ## 🎨 UI mockup
 
+### v1
+
 <img src="src/assets/ui-mock.svg" alt="UI mockup of interactive stock price chart" />
+
+### v2 - moved to v2 as filters are more accessible and makes it easier to expand moving forward
+
+<img src="src/assets/ui-mock-v2.svg" alt="Updated UI-V2 mockup of interactive stock price chart" />
 
 ### Component breakdown
 
@@ -82,7 +89,7 @@ So that I can chart a time series of prices for the selected stocks and date ran
   - renders the Multi-select component, allowing user to select up to 3 stocks to display on the line chart
 - `<DateRangePicker/>`
   - renders the Date Range Picker component
-- `<StockPriceChartContainer/>`
+- `<StockPriceChart/>`
 
   - renders the overall layout which will render all the above components
 
