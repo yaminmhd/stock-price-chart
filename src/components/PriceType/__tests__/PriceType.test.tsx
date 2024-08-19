@@ -3,10 +3,14 @@ import { describe, it, expect, vi } from "vitest";
 import { PriceType } from "../PriceType";
 import useStockChartStore from "../../../store/useStockChartStore";
 import { stockChartStore } from "../../../store/utils/testHelpers";
-vi.mock("../../../store/useStockChartStore", () => ({
-  __esModule: true,
-  default: vi.fn(),
-}));
+vi.mock("../../../store/useStockChartStore", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as object),
+    __esModule: true,
+    default: vi.fn(),
+  };
+});
 
 describe("<PriceType/>", () => {
   const mockedUseStockChartStore = vi.mocked(useStockChartStore);
@@ -16,6 +20,10 @@ describe("<PriceType/>", () => {
       ...stockChartStore,
       setSelectedPriceType: mockSetSelectedPriceType,
     });
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
   });
 
   it("renders the component with initial selected value", () => {

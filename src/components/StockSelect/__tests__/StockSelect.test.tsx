@@ -1,18 +1,24 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import StockSelect from "../StockSelect";
-import useStockChartStore from "../../../store/useStockChartStore";
-import { stockChartStore } from "../../../store/utils/testHelpers";
-vi.mock("../../../store/useStockChartStore", () => ({
-  __esModule: true,
-  default: vi.fn(),
-}));
+import useStockChartStore, {
+  initialState,
+} from "../../../store/useStockChartStore";
+vi.mock("../../../store/useStockChartStore", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as object),
+    __esModule: true,
+    default: vi.fn(),
+  };
+});
 
 describe("<StockSelect/>", () => {
   const mockedUseStockChartStore = vi.mocked(useStockChartStore);
   const mockSetSelectedStocks = vi.fn();
   beforeEach(() => {
     mockedUseStockChartStore.mockReturnValue({
-      ...stockChartStore,
+      ...initialState,
+      selectedStocks: ["AAPL", "AMZN", "GOOGL"],
       setSelectedStocks: mockSetSelectedStocks,
     });
   });

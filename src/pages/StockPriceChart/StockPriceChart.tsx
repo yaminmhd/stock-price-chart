@@ -5,36 +5,11 @@ import { PriceChart } from "../../components/PriceChart";
 import { StockSelect } from "../../components/StockSelect";
 import { DateRangePicker } from "../../components/DateRangePicker";
 import { PriceType } from "../../components/PriceType";
-import { useStockPricesQuery } from "../../api/stockPrices";
-import useStockChartStore from "../../store/useStockChartStore";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
+import FallbackError from "./FallbackError";
 
 function StockPriceChart() {
-  const { selectedStocks, selectedRange } = useStockChartStore();
-  const { data, isLoading, isError } = useStockPricesQuery(
-    selectedStocks,
-    selectedRange
-  );
-
-  const renderPriceChart = () => {
-    if (isLoading) {
-      return <Typography>Loading...</Typography>;
-    }
-
-    if (isError) {
-      return <Typography>Error fetching data</Typography>;
-    }
-
-    if (selectedStocks.length === 0) {
-      return (
-        <Typography variant="h6">
-          Select a stock to view the price chart
-        </Typography>
-      );
-    }
-
-    return <PriceChart stockPriceResult={data ?? []} />;
-  };
-
   return (
     <Grid container padding={5} spacing={5}>
       <Grid item xs={12}>
@@ -61,7 +36,13 @@ function StockPriceChart() {
       </Grid>
 
       <Grid item xs={12} sm={5} md={9}>
-        {renderPriceChart()}
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary onReset={reset} FallbackComponent={FallbackError}>
+              <PriceChart />
+            </ErrorBoundary>
+          )}
+        </QueryErrorResetBoundary>
       </Grid>
     </Grid>
   );

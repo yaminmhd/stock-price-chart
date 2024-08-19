@@ -3,10 +3,14 @@ import DateRangePicker, { DATE_RANGE_FORMAT } from "../DateRangePicker";
 import { addDays, format } from "date-fns";
 import useStockChartStore from "../../../store/useStockChartStore";
 import { stockChartStore } from "../../../store/utils/testHelpers";
-vi.mock("../../../store/useStockChartStore", () => ({
-  __esModule: true,
-  default: vi.fn(),
-}));
+vi.mock("../../../store/useStockChartStore", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as object),
+    __esModule: true,
+    default: vi.fn(),
+  };
+});
 
 describe("<DateRangePicker/>", () => {
   const mockedUseStockChartStore = vi.mocked(useStockChartStore);

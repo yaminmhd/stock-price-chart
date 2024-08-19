@@ -11,6 +11,7 @@ const useStockPricesQuery = (
     queryKey: ["stockPrice", selectedStocks, selectedRange],
     queryFn: () => getStockPrices(selectedStocks, selectedRange),
     enabled: selectedStocks.length > 0 && selectedRange !== undefined,
+    throwOnError: true,
   });
 };
 

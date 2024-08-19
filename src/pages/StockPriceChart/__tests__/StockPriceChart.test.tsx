@@ -1,62 +1,44 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { retrieveStockPrice } from "../../../api/mock";
-import { StockApiResponse } from "../../../api/stockPrices";
+import { fireEvent, screen } from "@testing-library/react";
+import { server } from "../../../api/mock";
 import useStockChartStore from "../../../store/useStockChartStore";
-import { startOfMonth } from "date-fns";
 import StockPriceChart from "../StockPriceChart";
 import { stockChartStore } from "../../../store/utils/testHelpers";
-vi.mock("../../../store/useStockChartStore", () => ({
-  __esModule: true,
-  default: vi.fn(),
-}));
-
-vi.mock("@tanstack/react-query");
-const mockFetchStockPriceQuery = vi.mocked(useQuery<StockApiResponse[]>);
+import { http, HttpResponse } from "msw";
+import { renderWithClient } from "./utils";
+vi.mock("../../../store/useStockChartStore", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as object),
+    __esModule: true,
+    default: vi.fn(),
+  };
+});
 
 describe("StockPriceChart", () => {
   const mockedUseStockChartStore = vi.mocked(useStockChartStore);
-  beforeEach(() => {
-    mockedUseStockChartStore.mockReturnValue({
-      ...stockChartStore,
-    });
-
-    mockFetchStockPriceQuery.mockReturnValue({
-      data: [] as StockApiResponse[],
-      isPending: false,
-    } as UseQueryResult<StockApiResponse[]>);
-  });
 
   afterEach(() => {
     vi.resetAllMocks();
   });
 
-  it("should render title and filters", () => {
-    render(<StockPriceChart />);
+  it("should render title and filters section", () => {
+    mockedUseStockChartStore.mockReturnValue({
+      ...stockChartStore,
+    });
+    renderWithClient(<StockPriceChart />);
 
     expect(screen.getByText("📈 Stock price chart")).toBeInTheDocument();
+
     expect(screen.getByText(/filters/i)).toBeInTheDocument();
     expect(screen.getByTestId("filter-icon")).toBeInTheDocument();
-  });
-
-  it("should render stock select component", () => {
-    render(<StockPriceChart />);
 
     expect(screen.getByText("Stock")).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/select stocks/i)).toBeInTheDocument();
-  });
-
-  it("should render price type component", () => {
-    render(<StockPriceChart />);
 
     expect(screen.getByText(/price type/i)).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText(/select price type/i)
     ).toBeInTheDocument();
-  });
-
-  it("should render date range component", () => {
-    render(<StockPriceChart />);
 
     expect(screen.getByText(/date range/i)).toBeInTheDocument();
     expect(screen.getByTestId("date-range-picker")).toBeInTheDocument();
@@ -64,14 +46,10 @@ describe("StockPriceChart", () => {
 
   it("should render stock chart component default message", () => {
     mockedUseStockChartStore.mockReturnValue({
-      selectedStocks: [],
-      selectedPriceType: { label: "Close", value: "c" },
-      selectedRange: { from: startOfMonth(new Date()), to: new Date() },
-      setSelectedStocks: vi.fn(),
-      setSelectedPriceType: vi.fn(),
-      setSelectedRange: vi.fn(),
+      ...stockChartStore,
     });
-    render(<StockPriceChart />);
+
+    renderWithClient(<StockPriceChart />);
 
     expect(
       screen.getByText(/select a stock to view the price chart/i)
@@ -79,46 +57,59 @@ describe("StockPriceChart", () => {
   });
 
   it("should render loading indicator upon selecting an dropdown option", async () => {
-    mockFetchStockPriceQuery.mockReturnValue({
-      isLoading: true,
-    } as UseQueryResult<StockApiResponse[]>);
+    mockedUseStockChartStore.mockReturnValue({
+      ...stockChartStore,
+      selectedStocks: ["AAPL"],
+    });
 
-    render(<StockPriceChart />);
+    renderWithClient(<StockPriceChart />);
+
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
     fireEvent.mouseDown(inputElement);
 
     fireEvent.click(screen.getByRole("option", { name: /AAPL/i }));
 
-    expect(await screen.findByText("Loading...")).toBeInTheDocument();
+    expect(await screen.findByTestId("loading-icon")).toBeInTheDocument();
   });
 
-  it("should render stock chart and chip when user selects an option", () => {
-    const result = [retrieveStockPrice("AAPL")];
-    mockFetchStockPriceQuery.mockReturnValue({
-      data: result as StockApiResponse[],
-      isPending: false,
-    } as UseQueryResult<StockApiResponse[]>);
+  it("should render stock price chart and chip when user selects an option", async () => {
+    mockedUseStockChartStore.mockReturnValue({
+      ...stockChartStore,
+      selectedStocks: ["AAPL"],
+    });
 
-    render(<StockPriceChart />);
+    renderWithClient(<StockPriceChart />);
 
     const inputElement = screen.getByPlaceholderText(/select stocks/i);
     fireEvent.mouseDown(inputElement);
 
     fireEvent.click(screen.getByRole("option", { name: /AAPL/i }));
+    expect(await screen.findByTestId("loading-icon")).toBeInTheDocument();
 
     expect(
       screen.queryByText("Select a stock to view the price chart")
     ).toBeNull();
-    expect(screen.getAllByText("AAPL").length).toEqual(2);
+    expect(await screen.findByTestId("AAPL-chip-tag")).toBeInTheDocument();
+    expect(await screen.findByTestId("price-chart")).toBeInTheDocument();
   });
 
-  it("should render error indicator when fetch feching stock price query fails", () => {
-    mockFetchStockPriceQuery.mockReturnValue({
-      isError: true,
-    } as UseQueryResult<StockApiResponse[]>);
+  it("should render fallback error component when fetch fetching stock price query fails", () => {
+    server.use(
+      http.get(
+        "https://api.polygon.io/v2/aggs/ticker/*/range/1/day/*/*",
+        () => {
+          return new HttpResponse("error", { status: 500 });
+        }
+      )
+    );
 
-    render(<StockPriceChart />);
+    renderWithClient(<StockPriceChart />);
 
-    expect(screen.getByText("Error fetching data")).toBeInTheDocument();
+    expect(
+      screen.getByText("Error encountered fetching stock price data")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Try again" })
+    ).toBeInTheDocument();
   });
 });
