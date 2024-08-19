@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import StockSelect from "../StockSelect";
 import useStockChartStore from "../../../store/useStockChartStore";
-import { initialState } from "../../../store/utils/testHelpers";
+import { stockChartStore } from "../../../store/utils/testHelpers";
 vi.mock("../../../store/useStockChartStore", () => ({
   __esModule: true,
   default: vi.fn(),
@@ -12,7 +12,7 @@ describe("<StockSelect/>", () => {
   const mockSetSelectedStocks = vi.fn();
   beforeEach(() => {
     mockedUseStockChartStore.mockReturnValue({
-      ...initialState,
+      ...stockChartStore,
       setSelectedStocks: mockSetSelectedStocks,
     });
   });

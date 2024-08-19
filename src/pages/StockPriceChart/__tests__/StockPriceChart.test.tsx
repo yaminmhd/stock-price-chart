@@ -5,6 +5,7 @@ import { StockApiResponse } from "../../../api/stockPrices";
 import useStockChartStore from "../../../store/useStockChartStore";
 import { startOfMonth } from "date-fns";
 import StockPriceChart from "../StockPriceChart";
+import { stockChartStore } from "../../../store/utils/testHelpers";
 vi.mock("../../../store/useStockChartStore", () => ({
   __esModule: true,
   default: vi.fn(),
@@ -17,12 +18,7 @@ describe("StockPriceChart", () => {
   const mockedUseStockChartStore = vi.mocked(useStockChartStore);
   beforeEach(() => {
     mockedUseStockChartStore.mockReturnValue({
-      selectedStocks: ["AAPL", "AMZN", "GOOGL"],
-      selectedPriceType: { label: "Close", value: "c" },
-      selectedRange: { from: startOfMonth(new Date()), to: new Date() },
-      setSelectedStocks: vi.fn(),
-      setSelectedPriceType: vi.fn(),
-      setSelectedRange: vi.fn(),
+      ...stockChartStore,
     });
 
     mockFetchStockPriceQuery.mockReturnValue({

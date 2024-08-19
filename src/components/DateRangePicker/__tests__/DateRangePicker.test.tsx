@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import DateRangePicker, { DATE_RANGE_FORMAT } from "../DateRangePicker";
 import { addDays, format } from "date-fns";
 import useStockChartStore from "../../../store/useStockChartStore";
-import { initialState } from "../../../store/utils/testHelpers";
+import { stockChartStore } from "../../../store/utils/testHelpers";
 vi.mock("../../../store/useStockChartStore", () => ({
   __esModule: true,
   default: vi.fn(),
@@ -13,7 +13,7 @@ describe("<DateRangePicker/>", () => {
   const mockSetSelectedRange = vi.fn();
   beforeEach(() => {
     mockedUseStockChartStore.mockReturnValue({
-      ...initialState,
+      ...stockChartStore,
       setSelectedRange: mockSetSelectedRange,
     });
   });
@@ -21,7 +21,7 @@ describe("<DateRangePicker/>", () => {
   it("should render DateRangePicker component with default display", () => {
     render(<DateRangePicker />);
 
-    const { from, to } = initialState.selectedRange;
+    const { from, to } = stockChartStore.selectedRange;
     const fromDate = from ? format(from, DATE_RANGE_FORMAT) : "";
     const toDate = to ? format(to, DATE_RANGE_FORMAT) : "";
 

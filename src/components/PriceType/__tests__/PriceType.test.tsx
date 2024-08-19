@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { PriceType } from "../PriceType";
 import useStockChartStore from "../../../store/useStockChartStore";
-import { initialState } from "../../../store/utils/testHelpers";
+import { stockChartStore } from "../../../store/utils/testHelpers";
 vi.mock("../../../store/useStockChartStore", () => ({
   __esModule: true,
   default: vi.fn(),
@@ -13,7 +13,7 @@ describe("<PriceType/>", () => {
   const mockSetSelectedPriceType = vi.fn();
   beforeEach(() => {
     mockedUseStockChartStore.mockReturnValue({
-      ...initialState,
+      ...stockChartStore,
       setSelectedPriceType: mockSetSelectedPriceType,
     });
   });
