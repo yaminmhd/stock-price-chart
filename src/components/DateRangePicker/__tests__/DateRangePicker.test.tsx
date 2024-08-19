@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import DateRangePicker from "../DateRangePicker";
-import { addDays } from "date-fns";
+import DateRangePicker, { DATE_RANGE_FORMAT } from "../DateRangePicker";
+import { addDays, format } from "date-fns";
 import useStockChartStore from "../../../store/useStockChartStore";
 import { initialState } from "../../../store/utils/testHelpers";
 vi.mock("../../../store/useStockChartStore", () => ({
@@ -18,10 +18,17 @@ describe("<DateRangePicker/>", () => {
     });
   });
 
-  it("should render DateRangePicker component", () => {
+  it("should render DateRangePicker component with default display", () => {
     render(<DateRangePicker />);
 
+    const { from, to } = initialState.selectedRange;
+    const fromDate = from ? format(from, DATE_RANGE_FORMAT) : "";
+    const toDate = to ? format(to, DATE_RANGE_FORMAT) : "";
+
     expect(screen.getByRole("grid")).toBeInTheDocument();
+    expect(
+      screen.getByText(`From: ${fromDate} - To: ${toDate}`)
+    ).toBeInTheDocument();
   });
 
   it("should disable future dates outside the allowed range", () => {

@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { api } from "../base";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
+import { DATE_RANGE_FORMAT } from "../../components/DateRangePicker";
 
 type StockResult = {
   v: number; // volume
@@ -29,8 +30,11 @@ const getStockPrice = async (
   ticker: string,
   selectedDateRange: DateRange
 ): Promise<AxiosResponse<StockApiResponse>> => {
-  const fromDate = format(selectedDateRange?.from || new Date(), "yyyy-MM-dd");
-  const toDate = format(selectedDateRange?.to || new Date(), "yyyy-MM-dd");
+  const fromDate = format(
+    selectedDateRange?.from || new Date(),
+    DATE_RANGE_FORMAT
+  );
+  const toDate = format(selectedDateRange?.to || new Date(), DATE_RANGE_FORMAT);
   return await api.get(
     `${
       import.meta.env.VITE_POLYGON_BASE_URL
