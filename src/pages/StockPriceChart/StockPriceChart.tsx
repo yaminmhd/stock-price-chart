@@ -36,11 +36,11 @@ function StockPriceChart() {
   };
 
   return (
-    <Grid container padding={8} spacing={5}>
+    <Grid container padding={5} spacing={5}>
       <Grid item xs={12}>
         <Typography variant="h5">📈 Stock price chart</Typography>
       </Grid>
-      <Grid item xs={12} md={3}>
+      <Grid item xs={12} sm={5} md={3}>
         <Typography variant="h6">
           <TuneIcon data-testid="filter-icon" sx={{ mr: "5px" }} />
           Filters
@@ -60,7 +60,7 @@ function StockPriceChart() {
         <DateRangePicker />
       </Grid>
 
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} sm={5} md={9}>
         {renderPriceChart()}
       </Grid>
     </Grid>

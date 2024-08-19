@@ -23,7 +23,7 @@ const PriceChart = ({ stockPriceResult }: PriceChartProps) => {
   };
 
   return (
-    <LineChart width={1000} height={500}>
+    <LineChart width={1000} height={700}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="date" type="category" allowDuplicatedCategory={false} />
       <YAxis />
