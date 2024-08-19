@@ -23,7 +23,8 @@
 
 - `pnpm` is used as package manager. Do follow installation guide [here](https://pnpm.io/installation) before running the commands below.
 - `Polygon.io` [api](https://polygon.io/docs/stocks/getting-started) is used to fetch the stock prices. Create an account [here](https://polygon.io/dashboard/signup) to get an `API Key` and add it in the `.env.local` file before running the application.
-  - `cp .env.example .env.local`
+  - Copy the example .env file to local using this command
+    - `cp .env.example .env.local`
 
 ### Installation
 
