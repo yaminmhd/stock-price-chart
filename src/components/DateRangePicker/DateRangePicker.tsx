@@ -7,7 +7,11 @@ import useStockChartStore from "../../store/useStockChartStore";
 export const DATE_RANGE_FORMAT = "yyyy-MM-dd";
 
 const DateRangePicker = () => {
-  const { selectedRange, setSelectedRange } = useStockChartStore();
+  const selectedRange = useStockChartStore((state) => state.selectedRange);
+  const setSelectedRange = useStockChartStore(
+    (state) => state.setSelectedRange
+  );
+
   const displaySelectedDateRange = () => {
     return (
       <Typography variant="caption">

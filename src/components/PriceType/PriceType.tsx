@@ -12,7 +12,12 @@ const priceTypesOptions: PriceTypeConfig[] = [
 ];
 
 const PriceType = () => {
-  const { selectedPriceType, setSelectedPriceType } = useStockChartStore();
+  const selectedPriceType = useStockChartStore(
+    (state) => state.selectedPriceType
+  );
+  const setSelectedPriceType = useStockChartStore(
+    (state) => state.setSelectedPriceType
+  );
   return (
     <Autocomplete
       id="price-type-selection"

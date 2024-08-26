@@ -5,8 +5,11 @@ import { StockApiResponse, useStockPricesQuery } from "../../api/stockPrices";
 import useStockChartStore from "../../store/useStockChartStore";
 
 const PriceChart = () => {
-  const { selectedPriceType, selectedStocks, selectedRange } =
-    useStockChartStore();
+  const selectedStocks = useStockChartStore((state) => state.selectedStocks);
+  const selectedRange = useStockChartStore((state) => state.selectedRange);
+  const selectedPriceType = useStockChartStore(
+    (state) => state.selectedPriceType
+  );
   const { data: stockPriceResult } = useStockPricesQuery(
     selectedStocks,
     selectedRange

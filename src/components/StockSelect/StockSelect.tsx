@@ -3,7 +3,11 @@ import useStockChartStore from "../../store/useStockChartStore";
 
 const stockOptions = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"];
 const StockSelect = () => {
-  const { selectedStocks, setSelectedStocks } = useStockChartStore();
+  const selectedStocks = useStockChartStore((state) => state.selectedStocks);
+  const setSelectedStocks = useStockChartStore(
+    (state) => state.setSelectedStocks
+  );
+
   return (
     <Autocomplete
       multiple
